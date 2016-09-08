@@ -1,0 +1,19 @@
+// Create a custom Cloud9 runner - similar to the Sublime build system
+// For more information see https://docs.c9.io/custom_runners.html
+{
+  "script": [
+    "set -e",
+    "cd \"$file_path/..\"",
+    "make \"build/$file_base_name\"",
+    "if [ \"$debug\" == true ]; then ",
+    "node $HOME/.c9/bin/c9gdbshim.js \"build/$file_base_name\" $args",
+    "else",
+    "\"build/$file_base_name\" $args",
+    "fi"
+  ],
+  "info": "Running $file",
+  "debugger": "gdb",
+  "$debugDefaultState": false,
+  "env": {},
+  "selector": "^.*\\.(cpp)$"
+}

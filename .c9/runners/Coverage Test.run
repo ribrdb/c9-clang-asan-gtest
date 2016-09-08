@@ -1,0 +1,18 @@
+// Create a custom Cloud9 runner - similar to the Sublime build system
+// For more information see https://docs.c9.io/custom_runners.html
+{
+  "script": [
+    "set -e",
+    "cd \"$file_path/..\"",
+    "make \"build/$file_base_name.cov\"",
+    "LLVM_PROFILE_FILE=\"build/$file_base_name.profraw\" \"build/$file_base_name.cov\" $args||true",
+    "llvm-profdata-3.8 merge \"build/$file_base_name.profraw\" -o \"build/$file_base_name.profdata\"",
+    "rm \"build/$file_base_name.profraw\"",
+    "echo '<pre>' >coverage/\"$file_base_name\".html",
+    "llvm-cov-3.8 show \"build/$file_base_name.cov\" -use-color -instr-profile=\"build/$file_base_name.profdata\" $(<build/$file_base_name.cov.sources) |ansi-to-html -x>>coverage/\"$file_base_name\".html",
+    "echo '</pre>' >>coverage/\"$file_base_name\".html"
+  ],
+  "info": "Coverage testing $file",
+  "env": {},
+  "selector": "^.*\\.(cpp)$"
+}
