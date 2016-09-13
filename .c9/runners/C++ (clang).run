@@ -6,6 +6,7 @@
     "cd \"$file_path/..\"",
     "make \"build/$file_base_name\"",
     "if [ \"$debug\" == true ]; then ",
+    "export ASAN_OPTIONS=abort_on_error=1",
     "node $HOME/.c9/bin/c9gdbshim.js \"build/$file_base_name\" $args",
     "else",
     "\"build/$file_base_name\" $args",
