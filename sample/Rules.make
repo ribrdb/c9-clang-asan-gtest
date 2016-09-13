@@ -8,7 +8,7 @@ GTEST_DIR = $(HOME)/googletest/googletest
 USER_DIR = src
 
 # The c++ compiler to use
-CXX = /usr/bin/clang++-3.8
+CXX = /usr/bin/clang++-3.9
 
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
@@ -44,9 +44,10 @@ $(COVDIR):
 
 # Installs required tools and downloads googletest
 $(GTEST_DIR):
+	sudo apt-add-repository 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
 	sudo apt-get -y -qq update
-	sudo apt-get -y -qq install git clang-3.8 npm
-	sudo update-alternatives --install /usr/bin/llvm-symbolizer llvm-symbolizer /usr/bin/llvm-symbolizer-3.8 100
+	sudo apt-get -y -qq install git clang-3.9 npm
+	sudo update-alternatives --install /usr/bin/llvm-symbolizer llvm-symbolizer /usr/bin/llvm-symbolizer-3.9 100
 	sudo npm install -g -q ansi-to-html
 	cd $(HOME);git clone https://github.com/google/googletest.git
 
