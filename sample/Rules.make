@@ -46,7 +46,7 @@ $(COVDIR):
 $(GTEST_DIR):
 	sudo apt-add-repository 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
 	sudo apt-get -y -qq update
-	sudo apt-get -y -qq install git clang-3.9 npm
+	sudo apt-get -y --force-yes -qq install git clang-3.9 npm
 	sudo update-alternatives --install /usr/bin/llvm-symbolizer llvm-symbolizer /usr/bin/llvm-symbolizer-3.9 100
 	sudo npm install -g -q ansi-to-html
 	cd $(HOME);git clone https://github.com/google/googletest.git
