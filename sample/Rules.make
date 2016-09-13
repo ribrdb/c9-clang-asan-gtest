@@ -16,9 +16,9 @@ CXX = /usr/bin/clang++-3.8
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11 
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11
 
-CXXFLAGS_COVERAGE = -fno-sanitize=address -fprofile-instr-generate -fcoverage-mapping
+CXXFLAGS_COVERAGE = -fprofile-instr-generate -fcoverage-mapping
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -42,9 +42,11 @@ $(OBJDIR):
 $(COVDIR):
 	mkdir $(COVDIR)
 
+# Installs required tools and downloads googletest
 $(GTEST_DIR):
 	sudo apt-get -y -qq update
 	sudo apt-get -y -qq install git clang-3.8 npm
+	sudo update-alternatives --install /usr/bin/llvm-symbolizer llvm-symbolizer /usr/bin/llvm-symbolizer-3.8 100
 	sudo npm install -g -q ansi-to-html
 	cd $(HOME);git clone https://github.com/google/googletest.git
 
@@ -86,6 +88,7 @@ $$(OBJDIR)/$(1).cov: $$(addprefix $$(OBJDIR)/,$$($(1)_SRCS:.cpp=.cov.o)) | $$(CO
 	echo $$(addprefix $$(USER_DIR)/,$$(filter %.cpp,$$($(1)_SRCS))) >$$@.sources
 ALL_SRCS   += $$($(1)_SRCS)
 $$(OBJDIR)/$(1): CXXFLAGS +=  -fsanitize=address
+$$(OBJDIR)/$(1).cov: CXXFLAGS +=  -fsanitize=address
 $$(filter %.o,$$(addprefix $$(OBJDIR)/,$$($(1)_SRCS:.cpp=.o))): CXXFLAGS +=  -fsanitize=address
 endef
 
@@ -103,5 +106,3 @@ $(OBJDIR)/%.o : $(USER_DIR)/%.cpp | $(OBJDIR) $(GTEST_DIR)
 
 $(OBJDIR)/%.cov.o : $(USER_DIR)/%.cpp $(OBJDIR)/%.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(CXXFLAGS_COVERAGE) -c $< -o $@
-
-
